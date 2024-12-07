@@ -1,0 +1,123 @@
+﻿struct Node {
+string value;  // Giá trị của node (toán tử hoặc toán hạng)
+Node* left;    // Con trái
+Node* right;   // Con phải
+
+// Hàm khởi tạo node
+Node(string val) : value(val), left(nullptr), right(nullptr) {}
+};
+
+// Cây biểu thức
+class ExpressionTree {
+private:
+Node* root;
+
+// Hàm kiểm tra cây có rỗng không
+bool isEmpty() {
+return root == nullptr;
+}
+
+// Hàm duyệt cây theo thứ tự trung tố (Infix)
+void inorder(Node* node) {
+if (node == nullptr) return;
+if (node->left || node->right) cout << "(";  // Thêm ngoặc cho trung tố
+        inorder(node->left);
+        cout << node->value << " ";
+        inorder(node->right);
+        if (node->left || node->right) cout << ")";
+    }
+
+    // Hàm duyệt cây theo thứ tự tiền tố (Prefix)
+    void preorder(Node* node) {
+        if (node == nullptr) return;
+        cout << node->value << " ";
+        preorder(node->left);
+        preorder(node->right);
+    }
+
+    // Hàm duyệt cây theo thứ tự hậu tố (Postfix)
+    void postorder(Node* node) {
+        if (node == nullptr) return;
+        postorder(node->left);
+        postorder(node->right);
+        cout << node->value << " ";
+    }
+
+public:
+    // Hàm khởi tạo cây
+    ExpressionTree() : root(nullptr) {}
+
+    // Hàm khởi tạo cây biểu thức từ một cấu trúc cụ thể
+    void buildTree() {
+        // Xây dựng cây biểu thức cho: a*5 - b*c^6/d + (h-f)*e^(1/2)
+        
+        Node* node1 = new Node("a");
+        Node* node2 = new Node("5");
+        Node* mul1 = new Node("*");
+        mul1->left = node1;
+        mul1->right = node2;
+
+        Node* node3 = new Node("b");
+        Node* node4 = new Node("c");
+        Node* pow1 = new Node("^");
+        pow1->left = node4;
+        pow1->right = new Node("6");
+
+        Node* mul2 = new Node("*");
+        mul2->left = node3;
+        mul2->right = pow1;
+
+        Node* div1 = new Node("/");
+        div1->left = mul2;
+        div1->right = new Node("d");
+
+        Node* sub1 = new Node("-");
+        sub1->left = mul1;
+        sub1->right = div1;
+
+        Node* node5 = new Node("h");
+        Node* node6 = new Node("f");
+        Node* sub2 = new Node("-");
+        sub2->left = node5;
+        sub2->right = node6;
+
+        Node* sqrt1 = new Node("sqrt");
+        sqrt1->left = new Node("e");
+
+        Node* mul3 = new Node("*");
+        mul3->left = sub2;
+        mul3->right = sqrt1;
+
+        Node* add1 = new Node("+");
+        add1->left = sub1;
+        add1->right = mul3;
+
+        // Gán root cho cây
+        root = add1;
+    }
+
+    // In cây theo 3 cách duyệt
+    void printTree() {
+        cout << "Infix (Trung tố): ";
+        inorder(root);
+        cout << endl;
+
+        cout << "Prefix (Tiền tố): ";
+        preorder(root);
+        cout << endl;
+
+        cout << "Postfix (Hậu tố): ";
+        postorder(root);
+        cout << endl;
+    }
+};
+
+// Hàm main
+int main() {
+    ExpressionTree exprTree;
+
+    exprTree.buildTree();  // Xây dựng cây
+    exprTree.printTree();  // In cây theo các cách biểu diễn
+
+    return 0;
+}
